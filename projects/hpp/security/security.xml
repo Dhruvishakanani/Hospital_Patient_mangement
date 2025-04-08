@@ -27,4 +27,4 @@
         <field name="domain_force">[('visit_id','!=',False)]</field>
         <field name="groups" eval="[(4, ref('group_desk_person'))]"/>
     </record>
-</odoo>
+</odoo>y n
