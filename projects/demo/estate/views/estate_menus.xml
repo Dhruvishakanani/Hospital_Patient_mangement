@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Actions for the views -->
+    <record id="action_estate_property" model="ir.actions.act_window">
+        <field name="name">Real Estate</field>
+        <field name="res_model">estate.property</field>
+        <field name="view_mode">kanban,list,form</field>
+    </record>
+
+    <record id="action_estate_property_tag" model="ir.actions.act_window">
+        <field name="name">Property Tags</field>
+        <field name="res_model">estate.property.tag</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_estate_property_type" model="ir.actions.act_window">
+        <field name="name">Property Type</field>
+        <field name="res_model">estate.property.type</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!--    <record id="action_estate_property_offer" model="ir.actions.act_window">-->
+    <!--        <field name="name">Property Offer</field>-->
+    <!--        <field name="res_model">estate.property.offer</field>-->
+    <!--        <field name="view_mode">list,form</field>-->
+    <!--    </record>-->
+
+    <record id="action_estate_property_offer" model="ir.actions.act_window">
+        <field name="name">Offers for Properties of This Type</field>
+        <field name="res_model">estate.property.offer</field>
+        <field name="view_mode">list,form</field>
+        <!--        <field name="domain">[('property_id.property_type_id', '=', active_id)]</field>-->
+    </record>
+
+    <!-- Top level menu for Real Estate -->
+    <menuitem name="Real Estate" id="menu_real_estate" sequence="10"/>
+
+    <!-- Advertisement menu -->
+    <menuitem id="real_estate_advertisement_menu" name="Advertisement" parent="menu_real_estate" sequence="10"/>
+
+    <!-- Properties sub-menu under Advertisement -->
+    <menuitem id="estate_property_menu" name="Properties" parent="real_estate_advertisement_menu" action="action_estate_property" sequence="10"/>
+
+    <!-- Settings menu under Real Estate -->
+    <menuitem id="estate_setting_menu" name="Settings" parent="menu_real_estate" sequence="20"/>
+
+    <!-- Sub-menus under Settings -->
+    <menuitem id="estate_property_tag_menu" name="Property Tags" parent="estate_setting_menu" action="action_estate_property_tag" sequence="20"/>
+    <menuitem id="estate_property_type_menu" name="Property Types" parent="estate_setting_menu" action="action_estate_property_type" sequence="30"/>
+</odoo>

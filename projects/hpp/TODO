@@ -1,0 +1,87 @@
+1. On patient portal, show patient data in the account details section
+2. Show appointments on the portal (add dependancy in your custom app)
+3. While scheduling an appointment, give option to attache previous medical reports
+4. To schedule an appointment, charge token payment
+5. On scheduled appointment, send an email
+   (create a new mail template)
+6. Create a new patient visit model and view (Check following requirement)
+    a. Create a New Model for Patient Visits (patient.visit)
+    - Fields:
+
+name (Char, required): Auto-generated sequence for visit identification (e.g., VIS0001).
+patient_id (Many2one, required): Links to res.partner (Patients are managed in the Contact module).
+doctor_id (Many2one, required): Links to res.users (Assign a doctor for the visit).
+visit_date (DateTime, required): The date and time of the visit.
+notes (Text): Additional notes regarding the visit.
+state (Selection): Track visit status (Scheduled, Completed, Cancelled).
+prescription (Text): Any prescribed medications or treatments.
+prescription_line_ids (One2many): Links to prescription history.
+
+b. Create a Prescription Lines Model
+Model Name: patient.prescription.line
+Fields:
+visit_id (Many2one, required): Links to patient.visit.
+medicine_id (Many2one, required): Links to product.product (Medicine selection).
+dosage (Char, required): Dosage information for the medicine.
+instructions (Text): Any additional instructions.
+
+c. Link Patient Visits to the Patient Form Using a Smart Button
+Modify res.partner to include:
+One2many relationship: Show related visits.
+Smart Button: Display total visit count and navigate to visit records.
+
+d. Add Menu Items and Views
+Submenu: Patient Visits
+Submenu: Prescriptions
+Views to Create:
+Tree View: Display all visits with columns (Visit Name, Patient, Doctor, Visit Date, Status).
+Form View: Allow creating and editing patient visit details.
+Kanban View (Optional): A kanban representation of visits based on status.
+
+e. Implement Search View with Filters and Group By Options
+Filters:
+Scheduled Visits
+Completed Visits
+Cancelled Visits
+
+Group By:
+Doctor
+Patient
+Visit Date
+
+f. Show Patient Visits on the Portal
+Ensure portal.mixin is inherited in patient.visit model.
+Modify portal templates to display visits for logged-in users.
+Add a new page under My Visits in the portal.
+Display only the visits belonging to the logged-in partner.
+Show prescription history with medicines and dosages.
+
+f. Generate a Payment Receipt PDF Report
+Create a new PDF report template for visit payment receipts.
+Include details such as:
+Patient Name
+Visit Date
+Doctor Name
+Total Amount Paid
+Payment Method
+Prescription Details (if applicable)
+Add a button in the visit form to print/download the receipt.
+
+Ensure the receipt is available for patients to download from the portal.
+
+8. Add Payments Smart Button
+Add a Payments smart button on the visit form.
+The button should navigate to related payments.
+Add a new smart button on the patient form, which should open list view of all payments
+
+Create a new security group Desk Person.
+The smart button should be visible only to Administrators and Desk Person users.
+
+9. Security and Access Rights
+Define appropriate security groups:
+Doctor: Can view and edit assigned visits.
+Administrator: Full access.
+Desk Person: Can view and manage payments.
+Apply record rules accordingly.
+
+

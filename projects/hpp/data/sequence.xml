@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="seq_patient_visit" model="ir.sequence">
+        <field name="name">Patient Visit</field>
+        <field name="code">patient.visit</field>
+        <field name="prefix">V</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+</odoo>

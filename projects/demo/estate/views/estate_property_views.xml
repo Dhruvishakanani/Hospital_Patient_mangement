@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Custom Form View -->
+    <record id="estate_property_form_view" model="ir.ui.view">
+        <field name="name">estate.property.form</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <form string="Property">
+                <header>
+                    <button name="action_cancel" type="object" string="Cancel" class="btn-danger"/>
+                    <button name="action_sold" type="object" string="Set as Sold" class="btn-primary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="new,offer_received,offer_accepted,sold"/>
+                </header>
+                <sheet>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    <group>
+                        <group>
+                            <field name="property_type_id" widget="many2one" options="{'no_create': True, 'no_edit': True}"/>
+                            <field name="postcode"/>
+                            <field name="date_availability"/>
+                        </group>
+                        <group>
+                            <field name="expected_price"/>
+                            <field name="best_price"/>
+                            <field name="selling_price"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="description" string="Description">
+                            <group>
+                                <field name="description" placeholder="When Duplicated, Status And Date Are Not Copies"/>
+                                <field name="bedrooms"/>
+                                <field name="living_area"/>
+                                <field name="facades"/>
+                                <field name="garage"/>
+                                <field name="garden"/>
+                                <field name="garden_area" invisible="not garden"/>
+                                <field name="garden_orientation" invisible="not garden"/>
+                                <field name="total_area"/>
+                            </group>
+                        </page>
+                        <page name="offers" string="Offers">
+                            <field name="offer_ids">
+                                <list editable="bottom">
+                                    <field name="price"/>
+                                    <field name="partner_id"/>
+                                    <field name="validity"/>
+                                    <field name="date_deadline"/>
+                                    <button name="action_accept" type="object"  string="Accept" icon="fa-check" invisible="status != 'new'"/>
+                                    <button name="action_refuse" type="object"  string="Refuse" icon="fa-times" invisible="status != 'new'"/>
+                                    <field name="status"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page name="other info" string="Other Info">
+                            <group>
+                                <field name="salesperson_id"/>
+                                <field name="buyer_id"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Custom List View (Note: In Odoo, the list view is defined using the <tree> tag) -->
+    <record id="estate_property_list_view" model="ir.ui.view">
+        <field name="name">estate.property.list</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <list string="Estate Properties" decoration-success="state in ('offer_received', 'offer_accepted')"
+                  decoration-bf="state == 'offer_accepted'" decoration-muted="state == 'sold'">
+                <!-- Adjust the fields as needed -->
+                <field name="name" required="1"/>
+                <field name="property_type_id"/>
+                <field name="postcode"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="bedrooms"/>
+                <field name="living_area"/>
+                <field name="expected_price"/>
+                <field name="selling_price"/>
+                <field name="date_availability" optional="hide"/>
+            </list>
+        </field>
+    </record>0
+
+    <!-- Custom Search View -->
+    <record id="estate_property_search_view" model="ir.ui.view">
+        <field name="name">estate.property.search</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <search string="Search Estate Properties">
+                <!-- Allow quick search on these fields -->
+                <field name="name"/>
+                <field name="bedrooms"/>
+                <field name="state"/>
+                <field name="living_area"/>
+                <filter name="available" string="Available" domain="[('state', 'in', ['new', 'offer_received'])]"/>
+                <filter name="by_postcode" string="Group by Postcode" context="{'group_by': 'postcode'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_estate_property_kanban" model="ir.ui.view">
+        <field name="name">estate.property.kanban</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" default_group_by="property_type_id" disable_drag_and_drop="true">
+                <field name="expected_price"/>
+                <field name="best_price"/>
+                <field name="selling_price"/>
+                <field name="state"/>
+                <field name="property_type_id"/>
+                <templates>
+                    <t t-name="card">
+                        <div>
+                            <field name="name"/>
+                            <div>Expected Price: <field name="expected_price"/></div>
+                            <div t-if="record.best_price.raw_value">
+                                Best Price: <field name="best_price"/>
+                            </div>
+                            <div t-if="record.state.raw_value == 'offer_accepted'">
+                                Selling Price: <field name="selling_price"/>
+                            </div>
+                            <div>
+                            Tags: <field name="tag_ids"/>
+                        </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+<!--    <record id="view_estate_property_kanban" model="ir.ui.view">-->
+<!--        <field name="name">estate.property.kanban</field>-->
+<!--        <field name="model">estate.property</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <kanban class="o_kanban_mobile">-->
+<!--                <templates>-->
+<!--                    <t t-name="card">-->
+<!--                        <div class="row mb4">-->
+<!--                            <field name="name" class="fw-bold fs-5 col-8" readonly="state == 'done'"/>-->
+<!--                            <div class="col-4">-->
+<!--                                <field name="state" class="float-end" widget="label_selection"-->
+<!--                                        options="{'classes': {'draft': 'default', 'done': 'success'}}"/>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="row">-->
+<!--                            <div class="col-10">-->
+<!--                                <i class="fa fa-clock-o me-1" role="img" aria-label="Period" title="Period"/>-->
+<!--                                <field name="date_from"/> - -->
+<!--                                <field name="date_to"/>-->
+<!--                            </div>-->
+<!--                            <div class="col-2">-->
+<!--                                <field name="user_id" class="float-end" widget="many2one_avatar_user"/>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </t>-->
+<!--                </templates>-->
+<!--            </kanban>-->
+<!--        </field>-->
+<!--    </record>-->
+
+</odoo>
